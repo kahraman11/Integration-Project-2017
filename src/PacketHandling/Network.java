@@ -1,7 +1,6 @@
 package PacketHandling;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
@@ -13,7 +12,9 @@ import java.util.Enumeration;
 public class Network {
     public static InetAddress group = null;
     public static MulticastSocket socket = null;
+    public static int port = 8080;
     public static int nodenr = -1;
+    public static OutBuffer sendBuffer = null;
 
     public static void main(String[] args) throws IOException {
         Network n = new Network();
@@ -32,23 +33,27 @@ public class Network {
                 InetAddress iaddress = (InetAddress) ee.nextElement();
                 if (iaddress.toString().contains("192")) {
                     nodenr = Integer.parseInt(iaddress.toString().substring(iaddress.toString().length() - 1));
+                    System.out.println("IP Address: " + iaddress.getHostAddress() + " Nodenr: " + nodenr);
                 }
             }
         }
 
-        if (Inet4Address.getLocalHost().getHostAddress().contains("192")) {
-            nodenr = Integer.parseInt(Inet4Address.getLocalHost().getHostAddress().substring(Inet4Address.getLocalHost().getHostAddress().toString().length() - 1));
-            System.out.println("IP Address: " + Inet4Address.getLocalHost().getHostAddress() + " Nodenr: " + nodenr);
-        } else {
-            System.out.println("No nodenr available");
-        }
-
         //join socket and group
         group = InetAddress.getByName("228.0.0.0");
-        socket = new MulticastSocket(8080);
+        socket = new MulticastSocket(port);
         socket.joinGroup(group);
 
-        //TODO Start a thread that listens on input and output
+        //start outputbuffer to send stuff
+        OutBuffer out = new OutBuffer();
+
+        new RecThread().start();
+
+        //test
+        for(int i =0; i<100; i++) {
+            byte[] data = "e04fd020ea3a6910a2d808002b30309d".getBytes();
+            EZPacket packet = new EZPacket(0,0,0,0,data);
+            out.addPacket(packet);
+        }
     }
 
 }
