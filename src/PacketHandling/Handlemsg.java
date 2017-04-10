@@ -13,15 +13,18 @@ public class Handlemsg {
     public static HashMap<Integer, String> nodenames = new HashMap<>();
 
     static public void handlemsg(EZPacket p) {
-        switch(p.getType()) {
-            case 0: retransmit(p);
+        if (p.getSource() != Network.nodenr) {
+            switch (p.getType()) {
+                case 0:
+                    retransmit(p);
                     break;
-            case 1: //TODO
+                case 1: //TODO
                     break;
-            case 2: text(p);
+                case 2:
+                    text(p);
                     break;
+            }
         }
-
     }
 
     static public void retransmit(EZPacket p) {
@@ -56,8 +59,12 @@ public class Handlemsg {
     static public void text(EZPacket p) {
         //TODO handle incoming text
         //send to gui
-        Network.gui.message(nodenames.get(p.getSource()), p.getText());
-
+        nodenames.put(1, "Mathay");
+        if(nodenames.containsKey(p.getSource())) {
+            Network.gui.message(nodenames.get(p.getSource()), p.getText());
+        } else {
+            Network.gui.message("Hacker", p.getText());
+        }
         retransmit(p);
     }
 }

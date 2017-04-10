@@ -1,9 +1,6 @@
 package GUI;
 
-import PacketHandling.EZPacket;
-import PacketHandling.Network;
-import PacketHandling.OutBuffer;
-import PacketHandling.RecThread;
+import PacketHandling.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -43,10 +40,15 @@ public class GUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            textOutput.append("(Hier komt de naam): " + textInput.getText() + "\n");
+            textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
             textOutput.setCaretPosition(textOutput.getDocument().getLength());
+            EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+            Network.outBuffer.addPacket(packet);
+            if(textInput.getText().contains("setname")) {
+                String arr[] = textInput.getText().split(" ");
+                Handlemsg.nodenames.put(1, arr[1]);
+            }
             textInput.setText("");
-            //TODO send the message
         }
     }
 
