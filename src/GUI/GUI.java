@@ -46,7 +46,7 @@ public class GUI {
             Network.outBuffer.addPacket(packet);
             if(textInput.getText().contains("setname")) {
                 String arr[] = textInput.getText().split(" ");
-                Handlemsg.nodenames.put(1, arr[1]);
+                Handlemsg.nodenames.put(Network.nodenr, arr[1]);
             }
             textInput.setText("");
         }
