@@ -59,7 +59,6 @@ public class Handlemsg {
     static public void text(EZPacket p) {
         //TODO handle incoming text
         //send to gui
-        nodenames.put(1, "Mathay");
         if(nodenames.containsKey(p.getSource())) {
             Network.gui.message(nodenames.get(p.getSource()), p.getText());
         } else {

@@ -52,8 +52,6 @@ public class GUI {
         }
     }
 
-
-
     public void message(String name, String msg) {
         textOutput.append(name + ": " + msg + "\n");
         textOutput.setCaretPosition(textOutput.getDocument().getLength());
