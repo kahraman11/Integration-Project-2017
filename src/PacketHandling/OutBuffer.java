@@ -37,14 +37,19 @@ public class OutBuffer {
         Thread thread = new Thread(){
             public void run() {
                 while (true) {
+                    System.out.println(outputBuffer.size());
                     if (outputBuffer.size() > 0) {
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);
                     } else {
                         if(Handlemsg.nodenames.containsKey(Network.nodenr)) {
-                            sendPacket(new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes()).getDGP());
+                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes());
+                            p.setSeq(nextSeq());
+                            sendPacket(p.getDGP());
                         } else {
-                            sendPacket(new EZPacket(Network.nodenr, 0, 0, "Koos Naamloos".getBytes()).getDGP());
+                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koost naamloos".getBytes());
+                            p.setSeq(nextSeq());
+                            sendPacket(p.getDGP());
                         }
                     }
                     try {

@@ -31,6 +31,7 @@ public class Handlemsg {
             if(p.getType() == 0) {
                 //TODO handle pings by users use method underneatho
                 p.getText();
+                System.out.println(p.getSource() + " " + p.getText() + " " + p.getSeq());
                 nodenames.put(p.getSource(), p.getText());
             }
             Network.outBuffer.addPacket(p);

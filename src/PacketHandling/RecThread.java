@@ -13,7 +13,7 @@ public class RecThread extends Thread {
             DatagramPacket d = new DatagramPacket(new byte[24000], 24000);
             try {
                 Network.socket.receive(d);
-                System.out.println("Ik heb iets binnen");
+                //System.out.println("Ik heb iets binnen");
                 Handlemsg.handlemsg(new EZPacket(d));
             } catch (IOException e) {
                 e.printStackTrace();
