@@ -12,10 +12,17 @@ public class EZPacket {
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
+        EZPacket p = new EZPacket(0,0,0,2,"test dit is awesome".getBytes());
+        p.print();
+        System.out.println();
         EZPacket pkt = new EZPacket(0);
-        pkt.setSeq(257);
         pkt.setTarget(0);
+        pkt.data = "test dit is awesome".getBytes();
         pkt.print();
+        System.out.println();
+        for(byte b: pkt.data) {
+            System.out.print(b + " ");
+        }
     }
 
     public void setPacket(byte[] b) {
@@ -24,6 +31,7 @@ public class EZPacket {
         seq = b[0] * 256 + b[1];
         target = b[2];
         source = b[3];
+        type = b[6];
     }
 
     public void setPacket(byte[] b, int length) {
