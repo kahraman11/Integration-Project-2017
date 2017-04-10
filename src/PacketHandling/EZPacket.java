@@ -12,7 +12,7 @@ public class EZPacket {
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
-        EZPacket p = new EZPacket(0,0,0,2,"test dit is awesome".getBytes());
+        EZPacket p = new EZPacket(0,0,2,"test dit is awesome".getBytes());
         p.print();
         System.out.println();
         EZPacket pkt = new EZPacket(0);
@@ -58,9 +58,8 @@ public class EZPacket {
         source = src;
     }
 
-    public EZPacket(int seq, int src, int target, int type, byte[] data) {
+    public EZPacket(int src, int target, int type, byte[] data) {
         source = src;
-        this.seq = seq;
         this.target = target;
         this.data = data;
         this.type = type;

@@ -3,7 +3,6 @@ package PacketHandling;
 import GUI.GUI;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
@@ -57,7 +56,7 @@ public class Network {
         //test
         byte[] data = "e04fd020ea3a6910a2d808002b30309d".getBytes();
         for(int i =0; i<100; i++) {
-            EZPacket packet = new EZPacket(2,2,2,2,data);
+            EZPacket packet = new EZPacket(2,2,2,data);
             outBuffer.addPacket(packet);
         }
     }

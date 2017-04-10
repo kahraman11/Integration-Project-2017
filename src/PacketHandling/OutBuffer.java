@@ -27,6 +27,9 @@ public class OutBuffer {
     }
 
     public void addPacket(EZPacket packet) {
+        if(packet.getSource() == Network.nodenr) {
+            packet.setSeq(nextSeq());
+        }
         outputBuffer.add(packet.getDGP());
     }
 
