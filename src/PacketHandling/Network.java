@@ -60,7 +60,7 @@ public class Network {
         byte[] data = "e04fd020ea3a6910a2d808002b30309d".getBytes();
         for(int i =0; i<10; i++) {
             EZPacket packet = new EZPacket(1,2,2,data);
-            outBuffer.addPacket(packet);
+            //outBuffer.addPacket(packet);
         }
     }
 

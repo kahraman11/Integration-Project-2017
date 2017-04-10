@@ -13,7 +13,7 @@ public class Handlemsg {
     public static HashMap<Integer, String> nodenames = new HashMap<>();
 
     static public void handlemsg(EZPacket p) {
-        if (p.getSource() != Network.nodenr) {
+        if (p.getSource() != Network.nodenr && !received(p)) {
             switch (p.getType()) {
                 case 0:
                     retransmit(p);
@@ -28,14 +28,12 @@ public class Handlemsg {
     }
 
     static public void retransmit(EZPacket p) {
-        if(!received(p)) {
             if(p.getType() == 0) {
                 //TODO handle pings by users use method underneatho
                 p.getText();
                 nodenames.put(p.getSource(), p.getText());
             }
             Network.outBuffer.addPacket(p);
-        }
     }
 
     static public boolean received(EZPacket p) {
@@ -59,11 +57,11 @@ public class Handlemsg {
     static public void text(EZPacket p) {
         //TODO handle incoming text
         //send to gui
-        nodenames.put(1, "Mathay");
         if(nodenames.containsKey(p.getSource())) {
             Network.gui.message(nodenames.get(p.getSource()), p.getText());
         } else {
-            Network.gui.message("Hacker", p.getText());
+            System.out.println("test");
+            Network.gui.message("Hacker", p.getText() + " " + p.getSeq() + " " + p.getSource());
         }
         retransmit(p);
     }

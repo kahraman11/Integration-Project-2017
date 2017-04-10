@@ -40,6 +40,12 @@ public class OutBuffer {
                     if (outputBuffer.size() > 0) {
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);
+                    } else {
+                        if(Handlemsg.nodenames.containsKey(Network.nodenr)) {
+                            sendPacket(new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes()).getDGP());
+                        } else {
+                            sendPacket(new EZPacket(Network.nodenr, 0, 0, "Koos Naamloos".getBytes()).getDGP());
+                        }
                     }
                     try {
                         Thread.sleep(50);
