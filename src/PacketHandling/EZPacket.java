@@ -50,8 +50,6 @@ public class EZPacket {
         setPacket(b);
     }
 
-
-
     public EZPacket(DatagramPacket d) {
        setPacket(d.getData());
     }
