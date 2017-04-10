@@ -14,10 +14,10 @@ public class RecThread extends Thread {
             try {
                 Network.socket.receive(d);
                 System.out.println("Ik heb iets binnen");
+                Handlemsg.handlemsg(new EZPacket(d));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            new EZPacket(d);
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {

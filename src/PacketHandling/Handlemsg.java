@@ -1,6 +1,7 @@
 package PacketHandling;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Handlemsg {
 
     private static ConcurrentHashMap<Integer, ArrayList<Integer>> rec = new ConcurrentHashMap<>();
+    public static HashMap<Integer, String> nodenames = new HashMap<>();
 
     static public void handlemsg(EZPacket p) {
         switch(p.getType()) {
@@ -27,8 +29,9 @@ public class Handlemsg {
             if(p.getType() == 0) {
                 //TODO handle pings by users use method underneatho
                 p.getText();
+                nodenames.put(p.getSource(), p.getText());
             }
-            Network.sendBuffer.addPacket(p);
+            Network.outBuffer.addPacket(p);
         }
     }
 
@@ -52,6 +55,9 @@ public class Handlemsg {
 
     static public void text(EZPacket p) {
         //TODO handle incoming text
+        //send to gui
+        Network.gui.message(nodenames.get(p.getSource()), p.getText());
+
         retransmit(p);
     }
 }

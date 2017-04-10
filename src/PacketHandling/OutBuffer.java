@@ -1,5 +1,7 @@
 package PacketHandling;
 
+import GUI.GUI;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
  */
 public class OutBuffer {
     public static List<DatagramPacket> outputBuffer;
+    private GUI gui = null;
 
     public static int SEQ = 1;
 
@@ -32,10 +35,8 @@ public class OutBuffer {
             public void run() {
                 while (true) {
                     if (outputBuffer.size() > 0) {
-                        System.out.println(outputBuffer.get(0));
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);
-                        System.out.println(outputBuffer.size());
                     }
                     try {
                         Thread.sleep(50);
