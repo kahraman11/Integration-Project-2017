@@ -11,6 +11,13 @@ import java.util.List;
 public class OutBuffer {
     public static List<DatagramPacket> outputBuffer;
 
+    public static int SEQ = 1;
+
+    public static int nextSeq() {
+        SEQ++;
+        return SEQ;
+    }
+
     public OutBuffer() {
         outputBuffer = new ArrayList<>();
         startUp();

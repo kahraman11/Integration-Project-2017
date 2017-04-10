@@ -1,15 +1,14 @@
 package PacketHandling;
 
-import javax.xml.crypto.Data;
 import java.net.DatagramPacket;
 
 public class EZPacket {
 
-    private static final int headerlength = 8;
+    private static final int headerlength = 7;
     private int seq; //0-1
     private int target = 0; //2
     private int source; //3
-    private int type; //6,7
+    private int type; //6
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
@@ -42,6 +41,7 @@ public class EZPacket {
         bytes[3] = (byte) source;
         bytes[4] = (byte)(size / 256);
         bytes[5] = (byte)(size % 256);
+        bytes[6] = (byte) type;
         System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
