@@ -30,18 +30,13 @@ public class Network {
             while (ee.hasMoreElements())
             {
                 InetAddress iaddress = (InetAddress) ee.nextElement();
+                System.out.println(iaddress.getHostAddress());
                 if (iaddress.toString().contains("192")) {
                     nodenr = Integer.parseInt(iaddress.toString().substring(iaddress.toString().length() - 1));
                 }
             }
         }
-
-        if (Inet4Address.getLocalHost().getHostAddress().contains("192")) {
-            nodenr = Integer.parseInt(Inet4Address.getLocalHost().getHostAddress().substring(Inet4Address.getLocalHost().getHostAddress().toString().length() - 1));
-            System.out.println("IP Address: " + Inet4Address.getLocalHost().getHostAddress() + " Nodenr: " + nodenr);
-        } else {
-            System.out.println("No nodenr available");
-        }
+        System.out.println(nodenr);
 
         //join socket and group
         group = InetAddress.getByName("228.0.0.0");
