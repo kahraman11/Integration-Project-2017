@@ -69,7 +69,7 @@ public class EZPacket {
 
     public DatagramPacket getDGP() {
         byte[] bytes = getBytes();
-        return new DatagramPacket(bytes, bytes.length);
+        return new DatagramPacket(bytes, bytes.length, Network.group, Network.port);
     }
 
     public int getSeq() {
@@ -99,7 +99,7 @@ public class EZPacket {
     public void setSource(int i) {
         source = i;
     }
-
+g
     public int getSource() {
         return source;
     }
