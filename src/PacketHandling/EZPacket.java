@@ -84,6 +84,18 @@ public class EZPacket {
         target = i;
     }
 
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] d) {
+        data = d;
+    }
+
+    public String getName() {
+        return new String(getData());
+    }
+
     public int getTarget() {
         return  seq;
     }
