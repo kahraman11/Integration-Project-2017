@@ -24,8 +24,10 @@ public class Handlemsg {
 
     static public void retransmit(EZPacket p) {
         if(!received(p)) {
-            //TODO handle pings by users use method underneath
-            p.getName();
+            if(p.getType() == 0) {
+                //TODO handle pings by users use method underneatho
+                p.getText();
+            }
             Network.sendBuffer.addPacket(p);
         }
     }

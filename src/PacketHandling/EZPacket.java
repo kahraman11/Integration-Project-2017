@@ -92,7 +92,7 @@ public class EZPacket {
         data = d;
     }
 
-    public String getName() {
+    public String getText() {
         return new String(getData());
     }
 
