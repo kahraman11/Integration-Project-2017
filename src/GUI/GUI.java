@@ -14,6 +14,7 @@ public class GUI {
     private JPanel panel1;
     private JTextArea textOutput;
     private JTextField textInput;
+    private JButton sendButton;
 
     public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("GUIFrame");
@@ -27,6 +28,20 @@ public class GUI {
 
     public GUI() throws IOException {
         textInput.addActionListener(new sendActionListener());
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
+                textOutput.setCaretPosition(textOutput.getDocument().getLength());
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                Network.outBuffer.addPacket(packet);
+                if(textInput.getText().contains("setname")) {
+                    String arr[] = textInput.getText().split(" ");
+                    Handlemsg.nodenames.put(Network.nodenr, arr[1]);
+                }
+                textInput.setText("");
+            }
+        });
 
         //network
         Network n = new Network(this);
