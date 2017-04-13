@@ -1,5 +1,6 @@
 package PacketHandling;
 
+import Encryption.Encryption;
 import GUI.GUI;
 
 import java.io.IOException;

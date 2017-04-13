@@ -1,5 +1,7 @@
 package PacketHandling;
 
+import Encryption.Encryption;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 

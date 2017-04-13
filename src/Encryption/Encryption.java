@@ -5,12 +5,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
-public class EnAndDecrypt {
+public class Encryption {
 
 	private static final String CIPHER_TYPE = "AES";
-	private SecretKeySpec key;
+	private static SecretKeySpec key;
 
-	public EnAndDecrypt(String passWord){
+	static public void startUp(String passWord){
 		byte[] Key;
 		MessageDigest sha;
 		try {
@@ -26,15 +26,15 @@ public class EnAndDecrypt {
 
 	}
 	public static void main (String[] args) throws Exception{
-		EnAndDecrypt encrypt = new EnAndDecrypt("Cipher");
+		Encryption.startUp("SuperSecretPassWord1092837081");
 		String testbericht = "Hello World";
-		byte[] encryption = encrypt.encrypt(testbericht.getBytes());
-		byte[] decryption = encrypt.decrypt(encryption);
+		byte[] encryption = Encryption.encrypt(testbericht.getBytes());
+		byte[] decryption = Encryption.decrypt(encryption);
 		System.out.println(new String(encryption));
 		System.out.println(new String(decryption));
 	}
 
-	public byte[] encrypt(byte[] TextToEncrypt) {
+	static public byte[] encrypt(byte[] TextToEncrypt) {
 		byte[] encVal = null;
 		try {
 			Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
@@ -46,9 +46,10 @@ public class EnAndDecrypt {
 		return encVal;
 	}
 
-	public byte[] decrypt(byte[] encryptedText) {
+	static public byte[] decrypt(byte[] encryptedText) {
 		String decryptedValue = "";
-		try {
+        System.out.println("dencrypting: " + encryptedText.length);
+        try {
 			Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] decValue = cipher.doFinal(encryptedText);

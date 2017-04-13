@@ -1,5 +1,7 @@
 package PacketHandling;
 
+import Encryption.Encryption;
+
 import java.net.DatagramPacket;
 
 public class EZPacket {
@@ -25,6 +27,7 @@ public class EZPacket {
         }
     }
 
+
     public void setPacket(byte[] b) {
         data = new byte[b.length-headerlength];
         System.arraycopy(b,headerlength,data,0,b.length-headerlength);
@@ -34,13 +37,21 @@ public class EZPacket {
         type = b[8];
     }
 
+    //Don't set packet on unencrypted data
     public void setPacket(byte[] b, int length) {
-        byte[] reduced = new byte[length];
-        System.arraycopy(b, 0, reduced, 0, length);
+        byte[] reduced = new byte[headerlength+length];
+        System.out.println("length: "  +length);
+        System.arraycopy(b, 0, reduced, 0, headerlength);
+        if(headerlength < length) {
+            byte[] encrypted = new byte[length-headerlength];
+            System.arraycopy(b, headerlength, encrypted, 0, length-headerlength);
+            byte[] decrypted = Encryption.decrypt(encrypted);
+            System.arraycopy(decrypted, 0,  reduced, headerlength, decrypted.length);
+        }
         setPacket(reduced);
     }
 
-    public byte[] getBytes() {
+    public byte[] getHeader() {
         int size = getSize();
         byte[] bytes = new byte[size];
         bytes[0] = (byte)(seq / 2097152);
@@ -52,7 +63,7 @@ public class EZPacket {
         bytes[6] = (byte)(size / 256);
         bytes[7] = (byte)(size % 256);
         bytes[8] = (byte) type;
-        System.arraycopy(data, 0, bytes, headerlength, data.length);
+        //System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
 
@@ -71,13 +82,22 @@ public class EZPacket {
         setPacket(b);
     }
 
+
+    //DO NOT USE ANYWHERE except for RecThread
     public EZPacket(DatagramPacket d) {
         int length = d.getData()[6] * 256 + d.getData()[7];
-       setPacket(d.getData(), length);
+        setPacket(d.getData(), length);
     }
 
     public DatagramPacket getDGP() {
-        byte[] bytes = getBytes();
+        byte[] bytes;
+        if(data.length > 0) {
+            byte[] encrypted = Encryption.encrypt(data);
+            bytes = new byte[encrypted.length + headerlength];
+            System.arraycopy(encrypted, 0, bytes, headerlength, encrypted.length);
+        } else {
+            bytes = getHeader();
+        }
         return new DatagramPacket(bytes, bytes.length, Network.group, Network.port);
     }
 
@@ -106,7 +126,7 @@ public class EZPacket {
     }
 
     public int getTarget() {
-        return  seq;
+        return  target;
     }
 
     public void setType(int i) {
@@ -130,7 +150,7 @@ public class EZPacket {
     }
 
     public void print() {
-        byte[] bytes = getBytes();
+        byte[] bytes = getHeader();
         for(byte b: bytes) {
             System.out.print(b + " ");
         }
