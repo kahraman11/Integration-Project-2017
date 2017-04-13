@@ -81,6 +81,8 @@ public class OutBuffer {
         if(packet.getSource() == Network.nodenr) {
             packet.setSeq(nextSeq(packet));
         }
+        System.out.println("sending packet " + packet.getSeq());
+        packet.dataPrint();
         outputBuffer.add(packet.getDGP());
     }
 

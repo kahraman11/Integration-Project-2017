@@ -35,8 +35,11 @@ public class EZPacket {
         System.out.println(b.length + " " + headerlength);
         System.arraycopy(b,headerlength,data,0,b.length-headerlength);
         if(data.length > 0) {
+            System.out.println("data just before decrypt " + data.length);
+            dataPrint();
             System.out.println("data before decrypting is length: " + data.length);
             data = Encryption.decrypt(data);
+            System.out.println("data decrypted: " + new String(data));
         }
         seq = b[0] * 2097152 + b[1] * 16384 + b[2]*128 + b[3];
         target = b[4];
@@ -55,14 +58,7 @@ public class EZPacket {
     }
 
     public byte[] getBytes() {
-        //Encryption
-        byte[] encrypted = new byte[0];
-        if(data.length > 0) {
-            System.out.println(data);
-            encrypted = Encryption.encrypt(data);
-            System.out.println("start: " + data.length + " end: " + encrypted.length);
-        }
-        int size = headerlength + encrypted.length;
+        int size = headerlength + data.length;
         byte[] bytes = new byte[size];
         bytes[0] = (byte)(seq / 2097152);
         bytes[1] = (byte)(seq / 16384);
@@ -78,7 +74,7 @@ public class EZPacket {
         bytes[11] = (byte)(seq / 16384);
         bytes[12] = (byte)(seq / 128);
         bytes[13] = (byte)(seq % 128);
-        System.arraycopy(encrypted, 0, bytes, headerlength, encrypted.length);
+        System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
 
@@ -118,6 +114,10 @@ public class EZPacket {
     public DatagramPacket getDGP() {
         data = Encryption.encrypt(data);
         byte[] bytes = getBytes();
+        System.out.println("sending name set: " + getSeq());
+        dataPrint();
+        System.out.println();
+        System.out.println("encryption decrypted: " + new String(Encryption.decrypt(data)));
         return new DatagramPacket(bytes, bytes.length, Network.group, Network.port);
     }
 
@@ -183,6 +183,12 @@ public class EZPacket {
 
     public int getSize() {
         return data.length+headerlength;
+    }
+
+    public void dataPrint() {
+        for(byte b: data) {
+            System.out.print(b + " ");
+        }
     }
 
     public void print() {
