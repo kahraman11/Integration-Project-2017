@@ -2,12 +2,14 @@ package GUI;
 
 import Encryption.Encryption;
 import PacketHandling.*;
+import com.sun.xml.internal.ws.resources.HandlerMessages;
+import jdk.internal.org.objectweb.asm.Handle;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +29,10 @@ public class GUI {
     private JTextArea connectedUserSTextArea;
     private JScrollPane jscrollpanel;
     private JButton sendImageButton;
+    private JComboBox privateUser;
 
     private JLabel lb = new JLabel();
+    private String prefix = "";
 
     public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("GUIFrame");
@@ -41,8 +45,13 @@ public class GUI {
     }
 
     public GUI() throws IOException {
-        jscrollpanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
-        //textOutput.setLineWrap(true);
+        jscrollpanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jscrollpanel.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+            }
+        });
+
         lb.setText("<html>The commands in this chatbox are: " +
                 "<br>cleartext - deletes all the messages in the chatbox " +
                 "<br>setname {name} - changes the username " +
@@ -100,6 +109,43 @@ public class GUI {
         new RecThread().start();
         Handlemsg.nodenames.put(Network.nodenr, "Koos Naamloos");
 
+        Thread threadComboBox = new Thread(){
+            public void run() {
+                while(true) {
+                    privateUser.removeAllItems();
+                    privateUser.addItem("All users");
+                    for(Integer node : Handlemsg.nodenames.keySet()) {
+                        privateUser.addItem("User " + node);
+                    }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        threadComboBox.start();
+
+        class ItemChangeListener implements ItemListener {
+            @Override
+            public void itemStateChanged(ItemEvent event) {
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                    Object item = event.getItem();
+                    String temp = event.getItem().toString();
+                    String arr[] = temp.split(" ", 2);
+                    if(!temp.equals("All users")) {
+                        prefix = "@user" + arr[1] + " ";
+                    } else {
+                        prefix = "";
+                    }
+                    System.out.println("prefix: " + prefix);
+                }
+            }
+        }
+
+        privateUser.addItemListener(new ItemChangeListener());
+
         connectedUserSTextArea.append("\nUser" + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
         Thread thread = new Thread(){
             public void run(){
@@ -122,7 +168,7 @@ public class GUI {
                         connectedUserSTextArea.append("\nUser " + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
                     }
                     try {
-                        Thread.currentThread().sleep(1000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -150,8 +196,9 @@ public class GUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (textInput.getText().contains("setname ")) {
-                String arr[] = textInput.getText().split(" ");
+            String input = prefix + textInput.getText();
+            if (input.contains("setname ")) {
+                String arr[] = input.split(" ");
                 if(arr.length != 1) {
                     Handlemsg.nodenames.put(Network.nodenr, arr[1]);
                     lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "<br>");
@@ -160,10 +207,10 @@ public class GUI {
                     lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid name.<br>");
                     textOutput.insertComponent(lb);
                 }
-            } else if (textInput.getText().contains("cleartext")) {
+            } else if (input.contains("cleartext")) {
                 lb.setText("");
                 textOutput.insertComponent(lb);
-            } else if (textInput.getText().contains("fontcolor ")) {
+            } else if (input.contains("fontcolor ")) {
                 String arr[] = textInput.getText().split(" ");
                 System.out.println("Array length: " + arr.length);
                 if(arr.length != 1) {
@@ -206,38 +253,38 @@ public class GUI {
                     lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.<br>");
                     textOutput.insertComponent(lb);
                 }
-            } else if (textInput.getText().contains(":)")) {
+            } else if (input.contains(":)")) {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img><br>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
-            }  else if (textInput.getText().contains(":(")) {
+            }  else if (input.contains(":(")) {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/sad.png' height=30 width=30></img><br>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
-            }  else if (textInput.getText().contains(":P")) {
+            }  else if (input.contains(":P")) {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/tongue-out-1.png' height=30 width=30></img>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
-            }  else if (textInput.getText().contains(":O")) {
+            }  else if (input.contains(":O")) {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/bored.png' height=30 width=30></img><br>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
-            }  else if (textInput.getText().contains(":S")) {
+            }  else if (input.contains(":S")) {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/confused-1.png' height=30 width=30></img><br>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
-            } else if (textInput.getText().contains("@user")) {
-                String arr[] = textInput.getText().split("r");
+            } else if (input.contains("@user")) {
+                String arr[] = input.split("r");
                 String number = arr[1].split("")[0];
                 int receiveNode = Integer.parseInt(number);
                 System.out.println("receive node: " + receiveNode);
 
-                String[] data = textInput.getText().split(" ", 2);
+                String[] data = input.split(" ", 2);
                 System.out.println("Data: " + data[1]);
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + " > " + Handlemsg.nodenames.get(receiveNode) + ":  " + data[1] + "<br>");
                 textOutput.insertComponent(lb);
