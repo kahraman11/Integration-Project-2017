@@ -36,10 +36,7 @@ public class EZPacket {
 
     public void setPacket(byte[] b, int length) {
         byte[] reduced = new byte[length];
-        System.out.println(length);
         System.arraycopy(b, 0, reduced, 0, length);
-
-        System.out.println(reduced.length);
         setPacket(reduced);
     }
 

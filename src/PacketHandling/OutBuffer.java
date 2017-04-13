@@ -36,20 +36,26 @@ public class OutBuffer {
     public void startUp() {
         Thread thread = new Thread(){
             public void run() {
+                int nr = 0;
                 while (true) {
-                    //System.out.println(outputBuffer.size());
+                    System.out.println("buffer: " + outputBuffer.size());
                     if (outputBuffer.size() > 0) {
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);
                     } else {
-                        if(Handlemsg.nodenames.containsKey(Network.nodenr)) {
-                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes());
-                            p.setSeq(nextSeq());
-                            sendPacket(p.getDGP());
+                        if(nr==10) {
+                            if (Handlemsg.nodenames.containsKey(Network.nodenr)) {
+                                EZPacket p = new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes());
+                                p.setSeq(nextSeq());
+                                sendPacket(p.getDGP());
+                            } else {
+                                EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koost naamloos".getBytes());
+                                p.setSeq(nextSeq());
+                                sendPacket(p.getDGP());
+                            }
+                            nr=0;
                         } else {
-                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koost naamloos".getBytes());
-                            p.setSeq(nextSeq());
-                            sendPacket(p.getDGP());
+                            nr++;
                         }
                     }
                     try {
