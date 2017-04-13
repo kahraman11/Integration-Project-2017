@@ -154,20 +154,23 @@ public class GUI {
                 String arr[] = textInput.getText().split(" ");
                 if(arr.length != 1) {
                     Handlemsg.nodenames.put(Network.nodenr, arr[1]);
-                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "\n");
+                    lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1]);
+                    textOutput.insertComponent(lb);
                 } else {
-                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": invalid name.\n");
+                    lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid name.<br>");
+                    textOutput.insertComponent(lb);
                 }
             } else if (textInput.getText().contains("cleartext")) {
-                System.out.println("ik ko hier");
-                textOutput.setText("");
+                lb.setText("<html>");
+                textOutput.insertComponent(lb);
             } else if (textInput.getText().contains("fontcolor ")) {
                 String arr[] = textInput.getText().split(" ");
                 System.out.println("Array length: " + arr.length);
                 if(arr.length != 1) {
                     arr[1] = arr[1].toLowerCase();
                     switch (arr[1].toLowerCase()) {
-                        case "red":     textOutput.setForeground(Color.RED);
+                        case "red":     lb.setText(lb.getText() + "<html><p color='red'>");
+                                        textOutput.insertComponent(lb);
                                         break;
                         case "black":   textOutput.setForeground(Color.black);
                                         break;
@@ -186,32 +189,43 @@ public class GUI {
                         case "orange":  textOutput.setForeground(Color.orange);
                                         break;
                         default:        textOutput.setForeground(Color.black);
-                                        //textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
+                            lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.");
+                            textOutput.insertComponent(lb);
                                         break;
                     }
                 } else {
-                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
+                    lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.");
+                    textOutput.insertComponent(lb);
                 }
             } else if (textInput.getText().contains(":)")) {
-                System.out.println("ik kom hier");
-                ImageIcon icon = new ImageIcon("src\\emoticons\\happy.png");
-                Image image = icon.getImage(); // transform it
-                Image newimg = image.getScaledInstance(12, 12,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-                icon = new ImageIcon(newimg);  // transform it back
-                //textOutput.insertIcon(icon);
-
-                //lb.setIcon(icon);
-                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
+                textOutput.insertComponent(lb);
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                OutBuffer.addPacket(packet);
+            }  else if (textInput.getText().contains(":(")) {
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/sad.png' height=30 width=30></img>");
+                textOutput.insertComponent(lb);
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                OutBuffer.addPacket(packet);
+            }  else if (textInput.getText().contains(":P")) {
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/tongue-out-1.png' height=30 width=30></img>");
+                textOutput.insertComponent(lb);
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                OutBuffer.addPacket(packet);
+            }  else if (textInput.getText().contains(":O")) {
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/bored.png' height=30 width=30></img>");
+                textOutput.insertComponent(lb);
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                OutBuffer.addPacket(packet);
+            }  else if (textInput.getText().contains(":S")) {
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/confused-1.png' height=30 width=30></img>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
             } else {
-                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText());
+                lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText());
                 textOutput.setText("");
                 textOutput.insertComponent(lb);
-
-                //textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
-                //textOutput.setCaretPosition(textOutput.getDocument().getLength());
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
             }
@@ -221,10 +235,10 @@ public class GUI {
 
     public void message(String name, String msg) {
         if(msg.contains(":)")) {
-            lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
+            lb.setText(lb.getText() + "<html><br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
             textOutput.insertComponent(lb);
         } else {
-            lb.setText(lb.getText() + "<br>" + name + ": " + msg);
+            lb.setText(lb.getText() + "<html><br>" + name + ": " + msg);
             textOutput.insertComponent(lb);
             textOutput.setCaretPosition(textOutput.getDocument().getLength());
         }
