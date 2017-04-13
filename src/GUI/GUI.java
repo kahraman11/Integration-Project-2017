@@ -31,7 +31,6 @@ public class GUI {
     private JLabel lb = new JLabel();
 
     public static void main(String[] args) throws IOException {
-        Handlemsg.nodenames.put(Network.nodenr, "Koos Naamloos");
         JFrame frame = new JFrame("GUIFrame");
         GUI gui = new GUI();
         frame.setContentPane(gui.panel1);
@@ -42,13 +41,13 @@ public class GUI {
     }
 
     public GUI() throws IOException {
-        lb.setText("<html>");
         jscrollpanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         //textOutput.setLineWrap(true);
-        textOutput.setText(textOutput.getText() + "The commands in this chatbox are:\n" +
-                "cleartext - deletes all the messages in the chatbox\n" +
-                "setname {name} - changes the username\n" +
-                "fontcolor {red, black, white, green, blue, cyan, pink, orange, yellow} - changes the color of the font\n");
+        lb.setText("<html>The commands in this chatbox are: " +
+                "<br>cleartext - deletes all the messages in the chatbox " +
+                "<br>setname {name} - changes the username " +
+                "<br>fontcolor {red, black, white, green, blue, cyan, pink, orange, yellow} - changes the color of the font ");
+        textOutput.insertComponent(lb);
 
         textInput.addActionListener(new sendActionListener());
         sendButton.addActionListener(new ActionListener() {
@@ -99,6 +98,7 @@ public class GUI {
         Network n = new Network(this);
         n.setConnection();
         new RecThread().start();
+        Handlemsg.nodenames.put(Network.nodenr, "Koos Naamloos");
 
         connectedUserSTextArea.append("\nUser" + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
         Thread thread = new Thread(){
@@ -201,8 +201,10 @@ public class GUI {
                 //textOutput.insertIcon(icon);
 
                 //lb.setIcon(icon);
-                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='C:\\Users\\matha\\IdeaProjects\\Integration-Project-2017\\src\\emoticons\\happy.png'></img>");
+                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src\\emoticons\\happy.png' height=30 width=30></img>");
                 textOutput.insertComponent(lb);
+                EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
+                OutBuffer.addPacket(packet);
             } else {
                 lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText());
                 textOutput.setText("");
@@ -218,7 +220,14 @@ public class GUI {
     }
 
     public void message(String name, String msg) {
-        textOutput.setText(textOutput.getText() + name + ": " + msg + "\n");
-        textOutput.setCaretPosition(textOutput.getDocument().getLength());
+        if(msg.contains("<img src='file:src\\emoticons\\happy.png'")) {
+            System.out.println("ik kom bij de image");
+            lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src\\emoticons\\happy.png' height=30 width=30></img>");
+            textOutput.insertComponent(lb);
+        } else {
+            lb.setText(lb.getText() + "<br>" + name + ": " + msg);
+            textOutput.insertComponent(lb);
+            textOutput.setCaretPosition(textOutput.getDocument().getLength());
+        }
     }
 }
