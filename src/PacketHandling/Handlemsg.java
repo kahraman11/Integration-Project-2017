@@ -18,7 +18,7 @@ public class Handlemsg {
                 case 0:
                     retransmit(p);
                     break;
-                case 1: //acks
+                case 1: OutBuffer.ack(p);
                     break;
                 case 2:
                     text(p);
@@ -33,10 +33,12 @@ public class Handlemsg {
             System.out.println(p.getSource() + " " + p.getText() + " " + p.getSeq());
             nodenames.put(p.getSource(), p.getText());
         }
-        EZPacket pkt = new EZPacket(Network.nodenr, 0, 2, p.getSource(), p.getSeq(), new byte[0]);
-        Network.outBuffer.addPacket(pkt);
+        if(p.getType() != 2 && p.getType() != 0) {
+            EZPacket pkt = new EZPacket(Network.nodenr, 0, 1, p.getSource(), p.getSeq(), new byte[0]);
+            OutBuffer.addPacket(pkt);
+        }
         System.out.println("retransmitted packet type: " + p.getType());
-        Network.outBuffer.addPacket(p);
+        OutBuffer.addPacket(p);
     }
 
     static public boolean received(EZPacket p) {

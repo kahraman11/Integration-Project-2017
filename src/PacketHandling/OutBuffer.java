@@ -43,12 +43,22 @@ public class OutBuffer {
         thread.start();
     }
 
-    public static boolean receivedAll(int i) {
-        return outstandingRec.get(i).containsAll(Handlemsg.nodenames.keySet());
+    public static void ack(EZPacket p) {
+        if(p.getAcktarget() == Network.nodenr){
+            if(outstandingRec.containsKey(p.getAck())){
+                List<Integer> list = outstandingRec.get(p.getAck());
+                list.add(p.getSource());
+                outstandingRec.put(p.getAck(), list);
+            } else {
+                List<Integer> list = new ArrayList<>();
+                list.add(p.getSource());
+                outstandingRec.put(p.getAck(), list);
+            }
+        }
     }
 
-    public void retry(EZPacket p) {
-        addPacket(p);
+    public static boolean receivedAll(int i) {
+        return outstandingRec.get(i).containsAll(Handlemsg.nodenames.keySet());
     }
 
     public static int SEQ = 1;
