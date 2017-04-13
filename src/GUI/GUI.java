@@ -35,7 +35,6 @@ public class GUI {
         frame.pack();
         frame.setVisible(true);
         gui.textInput.grabFocus();
-        Encryption.startUp("SuperSecretPassWord1092837081");
     }
 
     public GUI() throws IOException {

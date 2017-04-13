@@ -41,17 +41,11 @@ public class EZPacket {
     public void setPacket(byte[] b, int length) {
         byte[] reduced = new byte[headerlength+length];
         System.out.println("length: "  +length);
-        System.arraycopy(b, 0, reduced, 0, headerlength);
-        if(headerlength < length) {
-            byte[] encrypted = new byte[length-headerlength];
-            System.arraycopy(b, headerlength, encrypted, 0, length-headerlength);
-            byte[] decrypted = Encryption.decrypt(encrypted);
-            System.arraycopy(decrypted, 0,  reduced, headerlength, decrypted.length);
-        }
+        System.arraycopy(b, 0, reduced, 0, headerlength+length);
         setPacket(reduced);
     }
 
-    public byte[] getHeader() {
+    public byte[] getBytes() {
         int size = getSize();
         byte[] bytes = new byte[size];
         bytes[0] = (byte)(seq / 2097152);
@@ -63,7 +57,7 @@ public class EZPacket {
         bytes[6] = (byte)(size / 256);
         bytes[7] = (byte)(size % 256);
         bytes[8] = (byte) type;
-        //System.arraycopy(data, 0, bytes, headerlength, data.length);
+        System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
 
@@ -90,14 +84,7 @@ public class EZPacket {
     }
 
     public DatagramPacket getDGP() {
-        byte[] bytes;
-        if(data.length > 0) {
-            byte[] encrypted = Encryption.encrypt(data);
-            bytes = new byte[encrypted.length + headerlength];
-            System.arraycopy(encrypted, 0, bytes, headerlength, encrypted.length);
-        } else {
-            bytes = getHeader();
-        }
+        byte[] bytes = getBytes();
         return new DatagramPacket(bytes, bytes.length, Network.group, Network.port);
     }
 
@@ -150,7 +137,7 @@ public class EZPacket {
     }
 
     public void print() {
-        byte[] bytes = getHeader();
+        byte[] bytes = getBytes();
         for(byte b: bytes) {
             System.out.print(b + " ");
         }
