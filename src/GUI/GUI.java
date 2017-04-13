@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by mathay on 10-4-17.
@@ -15,6 +18,7 @@ public class GUI {
     private JTextArea textOutput;
     private JTextField textInput;
     private JButton sendButton;
+    private JTextArea connectedUserSTextArea;
 
     public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("GUIFrame");
@@ -47,6 +51,31 @@ public class GUI {
         Network n = new Network(this);
         n.setConnection();
         new RecThread().start();
+
+        connectedUserSTextArea.append("\nUser" + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
+        Thread thread = new Thread(){
+            public void run(){
+                while(true) {
+                    connectedUserSTextArea.setText("Connected user(s):");
+                    List nodenumbers = new ArrayList();
+                    nodenumbers.addAll(Handlemsg.nodenames.keySet());
+                    System.out.println("Nodenumbers: " + nodenumbers);
+                    for(int i = 0; i<nodenumbers.size(); i++) {
+                        if(!nodenumbers.get(i).equals(Network.nodenr)) {
+                            connectedUserSTextArea.append("\nUser " + (nodenumbers.get(i)) + ": " + Handlemsg.nodenames.get(nodenumbers.get(i)));
+                        } else {
+                            connectedUserSTextArea.append("\nUser" + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
+                        }
+                    }
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
     }
 
     private class sendActionListener implements ActionListener {
