@@ -37,7 +37,7 @@ public class OutBuffer {
         Thread thread = new Thread(){
             public void run() {
                 while (true) {
-                    System.out.println(outputBuffer.size());
+                    //System.out.println(outputBuffer.size());
                     if (outputBuffer.size() > 0) {
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);

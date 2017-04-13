@@ -34,7 +34,8 @@ public class Handlemsg {
                 System.out.println(p.getSource() + " " + p.getText() + " " + p.getSeq());
                 nodenames.put(p.getSource(), p.getText());
             }
-            Network.outBuffer.addPacket(p);
+        System.out.println("retransmitted packet type: " + p.getType());
+        Network.outBuffer.addPacket(p);
     }
 
     static public boolean received(EZPacket p) {

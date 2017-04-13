@@ -4,11 +4,11 @@ import java.net.DatagramPacket;
 
 public class EZPacket {
 
-    private static final int headerlength = 7;
-    private int seq; //0-1
-    private int target = 0; //2
-    private int source; //3
-    private int type; //6
+    private static final int headerlength = 9;
+    private int seq = 0; //0-3
+    private int target = 0; //4
+    private int source; //5
+    private int type; //8
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
@@ -28,28 +28,33 @@ public class EZPacket {
     public void setPacket(byte[] b) {
         data = new byte[b.length-headerlength];
         System.arraycopy(b,headerlength,data,0,b.length-headerlength);
-        seq = b[0] * 256 + b[1];
-        target = b[2];
-        source = b[3];
-        type = b[6];
+        seq = b[0] * 2097152 + b[1] * 16384 + b[2]*128 + b[3];
+        target = b[4];
+        source = b[5];
+        type = b[8];
     }
 
     public void setPacket(byte[] b, int length) {
         byte[] reduced = new byte[length];
+        System.out.println(length);
         System.arraycopy(b, 0, reduced, 0, length);
+
+        System.out.println(reduced.length);
         setPacket(reduced);
     }
 
     public byte[] getBytes() {
         int size = getSize();
         byte[] bytes = new byte[size];
-        bytes[0] = (byte)(seq / 256);
-        bytes[1] = (byte)(seq % 256);
-        bytes[2] = (byte) target;
-        bytes[3] = (byte) source;
-        bytes[4] = (byte)(size / 256);
-        bytes[5] = (byte)(size % 256);
-        bytes[6] = (byte) type;
+        bytes[0] = (byte)(seq / 2097152);
+        bytes[1] = (byte)(seq / 16384);
+        bytes[2] = (byte)(seq / 128);
+        bytes[3] = (byte)(seq % 128);
+        bytes[4] = (byte) target;
+        bytes[5] = (byte) source;
+        bytes[6] = (byte)(size / 256);
+        bytes[7] = (byte)(size % 256);
+        bytes[8] = (byte) type;
         System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
@@ -70,7 +75,7 @@ public class EZPacket {
     }
 
     public EZPacket(DatagramPacket d) {
-        int length = d.getData()[4] * 256 + d.getData()[5];
+        int length = d.getData()[6] * 256 + d.getData()[7];
        setPacket(d.getData(), length);
     }
 

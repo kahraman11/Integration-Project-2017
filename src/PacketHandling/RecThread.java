@@ -13,8 +13,9 @@ public class RecThread extends Thread {
             DatagramPacket d = new DatagramPacket(new byte[24000], 24000);
             try {
                 Network.socket.receive(d);
-                //System.out.println("Ik heb iets binnen");
-                Handlemsg.handlemsg(new EZPacket(d));
+                EZPacket ez = new EZPacket(d);
+                System.out.println("rec pkt type:" + ez.getType() + " seq:" + ez.getSeq() + " source:" + ez.getSource() + " size:" + ez.getSize());
+                Handlemsg.handlemsg(ez);
             } catch (IOException e) {
                 e.printStackTrace();
             }
