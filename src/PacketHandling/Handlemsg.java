@@ -62,11 +62,19 @@ public class Handlemsg {
     static public void text(EZPacket p) {
         //TODO handle incoming text
         //send to gui
-        if(nodenames.containsKey(p.getSource())) {
-            Network.gui.message(nodenames.get(p.getSource()), p.getText());
-        } else {
-            System.out.println("test");
-            Network.gui.message("Hacker", p.getText() + " " + p.getSeq() + " " + p.getSource());
+        if(p.getTarget() == 0) {
+            if (nodenames.containsKey(p.getSource())) {
+                Network.gui.message(nodenames.get(p.getSource()), p.getText());
+            } else {
+                System.out.println("test");
+                Network.gui.message("Hacker", p.getText() + " " + p.getSeq() + " " + p.getSource());
+            }
+        } else if(p.getTarget() == Network.nodenr) {
+            if (nodenames.containsKey(p.getSource())) {
+                Network.gui.message(nodenames.get(p.getSource())+ " > you", p.getText());
+            } else {
+                Network.gui.message("Hacker > you", p.getText() + " " + p.getSeq() + " " + p.getSource());
+            }
         }
         retransmit(p);
     }
