@@ -100,7 +100,7 @@ public class OutBuffer {
                                 p.setSeq(nextSeq(p));
                                 sendPacket(p.getDGP());
                             } else {
-                                EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koost naamloos".getBytes());
+                                EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koos naamloos".getBytes());
                                 p.setSeq(nextSeq(p));
                                 sendPacket(p.getDGP());
                             }
