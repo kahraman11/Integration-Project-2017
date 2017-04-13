@@ -60,12 +60,18 @@ public class GUI {
                     List nodenumbers = new ArrayList();
                     nodenumbers.addAll(Handlemsg.nodenames.keySet());
                     System.out.println("Nodenumbers: " + nodenumbers);
+                    Boolean bool = false;
                     for(int i = 0; i<nodenumbers.size(); i++) {
                         if(!nodenumbers.get(i).equals(Network.nodenr)) {
                             connectedUserSTextArea.append("\nUser " + (nodenumbers.get(i)) + ": " + Handlemsg.nodenames.get(nodenumbers.get(i)));
                         } else {
-                            connectedUserSTextArea.append("\nUser" + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
+                            System.out.println("ik kom hier");
+                            connectedUserSTextArea.append("\nUser " + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
+                            bool = true;
                         }
+                    }
+                    if(!bool) {
+                        connectedUserSTextArea.append("\nUser " + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
                     }
                     try {
                         Thread.currentThread().sleep(1000);
