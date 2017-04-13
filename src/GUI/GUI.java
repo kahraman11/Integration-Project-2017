@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+
 /**
  * Created by mathay on 10-4-17.
  */
@@ -19,6 +21,7 @@ public class GUI {
     private JTextField textInput;
     private JButton sendButton;
     private JTextArea connectedUserSTextArea;
+    private JScrollPane jscrollpanel;
 
     public static void main(String[] args) throws IOException {
         JFrame frame = new JFrame("GUIFrame");
@@ -31,6 +34,9 @@ public class GUI {
     }
 
     public GUI() throws IOException {
+        jscrollpanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+        textOutput.setLineWrap(true);
+
         textInput.addActionListener(new sendActionListener());
         sendButton.addActionListener(new ActionListener() {
             @Override

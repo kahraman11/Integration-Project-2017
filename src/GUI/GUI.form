@@ -11,7 +11,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <scrollpane id="d3119">
+      <scrollpane id="d3119" binding="jscrollpanel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -22,6 +22,7 @@
             <constraints/>
             <properties>
               <editable value="false"/>
+              <wrapStyleWord value="false"/>
             </properties>
           </component>
         </children>
@@ -58,6 +59,8 @@
               </grid>
             </constraints>
             <properties>
+              <editable value="false"/>
+              <enabled value="true"/>
               <margin top="0" left="2" bottom="0" right="0"/>
               <text value="Connected user(s):"/>
             </properties>
