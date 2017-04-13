@@ -27,7 +27,7 @@ public class Encryption {
 	}
 	public static void main (String[] args) throws Exception{
 		Encryption.startUp("SuperSecretPassWord1092837081");
-		String testbericht = "koos naamloos";
+		String testbericht = "test";
 		byte[] encryption = Encryption.encrypt(testbericht.getBytes());
 		byte[] decryption = Encryption.decrypt(encryption);
 		System.out.println(new String(encryption));

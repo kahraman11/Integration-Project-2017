@@ -58,6 +58,7 @@ public class EZPacket {
         //Encryption
         byte[] encrypted = new byte[0];
         if(data.length > 0) {
+            System.out.println(data);
             encrypted = Encryption.encrypt(data);
             System.out.println("start: " + data.length + " end: " + encrypted.length);
         }
