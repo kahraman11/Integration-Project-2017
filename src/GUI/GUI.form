@@ -18,12 +18,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="24245" class="javax.swing.JTextArea" binding="textOutput">
+          <component id="6c032" class="javax.swing.JTextPane" binding="textOutput">
             <constraints/>
-            <properties>
-              <editable value="false"/>
-              <wrapStyleWord value="false"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </scrollpane>

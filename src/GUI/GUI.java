@@ -4,6 +4,7 @@ import Encryption.Encryption;
 import PacketHandling.*;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,14 +21,17 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
  */
 public class GUI {
     private JPanel panel1;
-    private JTextArea textOutput;
+    private JTextPane textOutput;
     private JTextField textInput;
     private JButton sendButton;
     private JTextArea connectedUserSTextArea;
     private JScrollPane jscrollpanel;
     private JButton sendImageButton;
 
+    private JLabel lb = new JLabel();
+
     public static void main(String[] args) throws IOException {
+        Handlemsg.nodenames.put(Network.nodenr, "Koos Naamloos");
         JFrame frame = new JFrame("GUIFrame");
         GUI gui = new GUI();
         frame.setContentPane(gui.panel1);
@@ -38,9 +42,10 @@ public class GUI {
     }
 
     public GUI() throws IOException {
+        lb.setText("<html>");
         jscrollpanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
-        textOutput.setLineWrap(true);
-        textOutput.append("The commands in this chatbox are:\n" +
+        //textOutput.setLineWrap(true);
+        textOutput.setText(textOutput.getText() + "The commands in this chatbox are:\n" +
                 "cleartext - deletes all the messages in the chatbox\n" +
                 "setname {name} - changes the username\n" +
                 "fontcolor {red, black, white, green, blue, cyan, pink, orange, yellow} - changes the color of the font\n");
@@ -52,7 +57,7 @@ public class GUI {
                 if (textInput.getText().contains("setname ")) {
                     String arr[] = textInput.getText().split(" ");
                     Handlemsg.nodenames.put(Network.nodenr, arr[1]);
-                    textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "\n");
+                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "\n");
                 } else if (textInput.getText().contains("cleartext")) {
                     System.out.println("ik ko hier");
                     textOutput.setText("");
@@ -81,7 +86,7 @@ public class GUI {
                             break;
                     }
                 } else {
-                    textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
+                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
                     textOutput.setCaretPosition(textOutput.getDocument().getLength());
                     EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                     Network.outBuffer.addPacket(packet);
@@ -149,9 +154,9 @@ public class GUI {
                 String arr[] = textInput.getText().split(" ");
                 if(arr.length != 1) {
                     Handlemsg.nodenames.put(Network.nodenr, arr[1]);
-                    textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "\n");
+                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": name changed to " + arr[1] + "\n");
                 } else {
-                    textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": invalid name.\n");
+                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": invalid name.\n");
                 }
             } else if (textInput.getText().contains("cleartext")) {
                 System.out.println("ik ko hier");
@@ -181,24 +186,39 @@ public class GUI {
                         case "orange":  textOutput.setForeground(Color.orange);
                                         break;
                         default:        textOutput.setForeground(Color.black);
-                                        textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
+                                        //textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
                                         break;
                     }
                 } else {
-                    textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
+                    textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": invalid color.\n");
                 }
+            } else if (textInput.getText().contains(":)")) {
+                System.out.println("ik kom hier");
+                ImageIcon icon = new ImageIcon("src\\emoticons\\happy.png");
+                Image image = icon.getImage(); // transform it
+                Image newimg = image.getScaledInstance(12, 12,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+                icon = new ImageIcon(newimg);  // transform it back
+                //textOutput.insertIcon(icon);
+
+                //lb.setIcon(icon);
+                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='C:\\Users\\matha\\IdeaProjects\\Integration-Project-2017\\src\\emoticons\\happy.png'></img>");
+                textOutput.insertComponent(lb);
             } else {
-                textOutput.append(Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
-                textOutput.setCaretPosition(textOutput.getDocument().getLength());
+                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText());
+                textOutput.setText("");
+                textOutput.insertComponent(lb);
+
+                //textOutput.setText(textOutput.getText() + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "\n");
+                //textOutput.setCaretPosition(textOutput.getDocument().getLength());
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
-                Network.outBuffer.addPacket(packet);
+                OutBuffer.addPacket(packet);
             }
             textInput.setText("");
         }
     }
 
     public void message(String name, String msg) {
-        textOutput.append(name + ": " + msg + "\n");
+        textOutput.setText(textOutput.getText() + name + ": " + msg + "\n");
         textOutput.setCaretPosition(textOutput.getDocument().getLength());
     }
 }
