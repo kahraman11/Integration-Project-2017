@@ -220,7 +220,7 @@ public class GUI {
     }
 
     public void message(String name, String msg) {
-        if(msg.contains("<img src='file:src\\emoticons\\happy.png'")) {
+        if(msg.contains(":)")) {
             System.out.println("ik kom bij de image");
             lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src\\emoticons\\happy.png' height=30 width=30></img>");
             textOutput.insertComponent(lb);
