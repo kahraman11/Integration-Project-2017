@@ -18,7 +18,7 @@ public class Handlemsg {
                 case 0:
                     retransmit(p);
                     break;
-                case 1: //TODO
+                case 1: //acks
                     break;
                 case 2:
                     text(p);
@@ -28,12 +28,13 @@ public class Handlemsg {
     }
 
     static public void retransmit(EZPacket p) {
-            if(p.getType() == 0) {
-                //TODO handle pings by users use method underneatho
-                p.getText();
-                System.out.println(p.getSource() + " " + p.getText() + " " + p.getSeq());
-                nodenames.put(p.getSource(), p.getText());
-            }
+        if(p.getType() == 0) {
+            p.getText();
+            System.out.println(p.getSource() + " " + p.getText() + " " + p.getSeq());
+            nodenames.put(p.getSource(), p.getText());
+        }
+        EZPacket pkt = new EZPacket(Network.nodenr, 0, 2, p.getSource(), p.getSeq(), new byte[0]);
+        Network.outBuffer.addPacket(pkt);
         System.out.println("retransmitted packet type: " + p.getType());
         Network.outBuffer.addPacket(p);
     }

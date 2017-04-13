@@ -1,16 +1,16 @@
 package PacketHandling;
 
-import Encryption.Encryption;
-
 import java.net.DatagramPacket;
 
 public class EZPacket {
 
-    private static final int headerlength = 9;
+    private static final int headerlength = 14;
     private int seq = 0; //0-3
     private int target = 0; //4
     private int source; //5
     private int type; //8
+    private int acktarget = 0;
+    private int ack = 0; //10-13 (first is source rest is seq of received packet)
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
@@ -35,6 +35,8 @@ public class EZPacket {
         target = b[4];
         source = b[5];
         type = b[8];
+        acktarget = b[9];
+        ack = b[10] * 2097152 + b[11] * 16384 + b[12]*128 + b[13];
     }
 
     //Don't set packet on unencrypted data
@@ -57,6 +59,11 @@ public class EZPacket {
         bytes[6] = (byte)(size / 256);
         bytes[7] = (byte)(size % 256);
         bytes[8] = (byte) type;
+        bytes[9] = (byte) acktarget;
+        bytes[10] = (byte)(seq / 2097152);
+        bytes[11] = (byte)(seq / 16384);
+        bytes[12] = (byte)(seq / 128);
+        bytes[13] = (byte)(seq % 128);
         System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
@@ -70,6 +77,16 @@ public class EZPacket {
         this.target = target;
         this.data = data;
         this.type = type;
+    }
+
+
+    public EZPacket(int src, int target, int type, int acktarget, int ack,  byte[] data) {
+        source = src;
+        this.target = target;
+        this.data = data;
+        this.type = type;
+        this.acktarget = acktarget;
+        this.ack = ack;
     }
 
     public EZPacket(byte[] b) {
@@ -130,6 +147,22 @@ public class EZPacket {
 
     public int getSource() {
         return source;
+    }
+
+    public void setAck(int i) {
+        ack = i;
+    }
+
+    public int getAck() {
+        return ack;
+    }
+
+    public void setAcktarget(int i) {
+        acktarget = i;
+    }
+
+    public int getAcktarget() {
+        return acktarget;
     }
 
     public int getSize() {
