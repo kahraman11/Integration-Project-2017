@@ -1,5 +1,7 @@
 package PacketHandling;
 
+import GUI.GUI;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
@@ -10,6 +12,14 @@ import java.util.List;
  */
 public class OutBuffer {
     public static List<DatagramPacket> outputBuffer;
+    private GUI gui = null;
+
+    public static int SEQ = 1;
+
+    public static int nextSeq() {
+        SEQ++;
+        return SEQ;
+    }
 
     public OutBuffer() {
         outputBuffer = new ArrayList<>();
@@ -17,6 +27,9 @@ public class OutBuffer {
     }
 
     public void addPacket(EZPacket packet) {
+        if(packet.getSource() == Network.nodenr) {
+            packet.setSeq(nextSeq());
+        }
         outputBuffer.add(packet.getDGP());
     }
 
@@ -24,11 +37,20 @@ public class OutBuffer {
         Thread thread = new Thread(){
             public void run() {
                 while (true) {
+                    System.out.println(outputBuffer.size());
                     if (outputBuffer.size() > 0) {
-                        System.out.println(outputBuffer.get(0));
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);
-                        System.out.println(outputBuffer.size());
+                    } else {
+                        if(Handlemsg.nodenames.containsKey(Network.nodenr)) {
+                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, Handlemsg.nodenames.get(Network.nodenr).getBytes());
+                            p.setSeq(nextSeq());
+                            sendPacket(p.getDGP());
+                        } else {
+                            EZPacket p = new EZPacket(Network.nodenr, 0, 0, "koost naamloos".getBytes());
+                            p.setSeq(nextSeq());
+                            sendPacket(p.getDGP());
+                        }
                     }
                     try {
                         Thread.sleep(50);

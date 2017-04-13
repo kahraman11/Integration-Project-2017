@@ -1,22 +1,28 @@
 package PacketHandling;
 
-import javax.xml.crypto.Data;
 import java.net.DatagramPacket;
 
 public class EZPacket {
 
-    private static final int headerlength = 8;
+    private static final int headerlength = 7;
     private int seq; //0-1
     private int target = 0; //2
     private int source; //3
-    private int type; //6,7
+    private int type; //6
     private byte[] data = new byte[0];
 
     public static void main(String[] args) {
+        EZPacket p = new EZPacket(0,0,2,"test dit is awesome".getBytes());
+        p.print();
+        System.out.println();
         EZPacket pkt = new EZPacket(0);
-        pkt.setSeq(257);
         pkt.setTarget(0);
+        pkt.data = "test dit is awesome".getBytes();
         pkt.print();
+        System.out.println();
+        for(byte b: pkt.data) {
+            System.out.print(b + " ");
+        }
     }
 
     public void setPacket(byte[] b) {
@@ -25,6 +31,7 @@ public class EZPacket {
         seq = b[0] * 256 + b[1];
         target = b[2];
         source = b[3];
+        type = b[6];
     }
 
     public void setPacket(byte[] b, int length) {
@@ -42,6 +49,7 @@ public class EZPacket {
         bytes[3] = (byte) source;
         bytes[4] = (byte)(size / 256);
         bytes[5] = (byte)(size % 256);
+        bytes[6] = (byte) type;
         System.arraycopy(data, 0, bytes, headerlength, data.length);
         return bytes;
     }
@@ -50,9 +58,8 @@ public class EZPacket {
         source = src;
     }
 
-    public EZPacket(int seq, int src, int target, int type, byte[] data) {
+    public EZPacket(int src, int target, int type, byte[] data) {
         source = src;
-        this.seq = seq;
         this.target = target;
         this.data = data;
         this.type = type;
@@ -82,6 +89,18 @@ public class EZPacket {
 
     public void setTarget(int i) {
         target = i;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] d) {
+        data = d;
+    }
+
+    public String getText() {
+        return new String(getData());
     }
 
     public int getTarget() {
