@@ -201,7 +201,7 @@ public class GUI {
                 //textOutput.insertIcon(icon);
 
                 //lb.setIcon(icon);
-                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src\\emoticons\\happy.png' height=30 width=30></img>");
+                lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
@@ -221,8 +221,7 @@ public class GUI {
 
     public void message(String name, String msg) {
         if(msg.contains(":)")) {
-            System.out.println("ik kom bij de image");
-            lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src\\emoticons\\happy.png' height=30 width=30></img>");
+            lb.setText(lb.getText() + "<br>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img>");
             textOutput.insertComponent(lb);
         } else {
             lb.setText(lb.getText() + "<br>" + name + ": " + msg);
