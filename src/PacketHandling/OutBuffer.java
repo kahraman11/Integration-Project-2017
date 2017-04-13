@@ -55,7 +55,7 @@ public class OutBuffer {
 
     public static int nextSeq(EZPacket pkt) {
         SEQ++;
-        if(pkt.getType() != 0) {
+        if(pkt.getType() != 0 && pkt.getType() != 2) {
             outstandingAck.put(SEQ, System.nanoTime());
             outstandingPkt.put(SEQ, pkt);
         }
