@@ -35,6 +35,7 @@ public class Handlemsg {
     static public void recImage(EZPacket p) {
         if(p.getTarget() == Network.nodenr || p.getTarget() == 0) {
             ImageConverter.receive(p.getData());
+            System.out.println("length of image:" + p.getData().length);
         }
         retransmit(p);
     }

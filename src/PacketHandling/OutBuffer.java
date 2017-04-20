@@ -24,21 +24,24 @@ public class OutBuffer {
     public static void checkOutStanding() {
         Thread thread = new Thread() {
             public void run() {
-                for (Integer i : outstandingAck.keySet()) {
-                    long time = System.nanoTime();
-                    if(receivedAll(i)) {
-                        outstandingPkt.remove(i);
-                        outstandingAck.remove(i);
-                    }else if (time < outstandingAck.get(i) + 1000) {
-                        addPacket(outstandingPkt.get(i));
-                        outstandingPkt.remove(i);
-                        outstandingAck.remove(i);
+                while (true) {
+                    System.out.println(outstandingAck.size());
+                    for (Integer i : outstandingAck.keySet()) {
+                        long time = System.nanoTime();
+                        if (receivedAll(i)) {
+                            outstandingPkt.remove(i);
+                            outstandingAck.remove(i);
+                        } else if (time < outstandingAck.get(i) + 100) {
+                            addPacket(outstandingPkt.get(i));
+                            outstandingPkt.remove(i);
+                            outstandingAck.remove(i);
+                        }
                     }
-                }
-                try {
-                    Thread.sleep(50);
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -60,14 +63,18 @@ public class OutBuffer {
     }
 
     public static boolean receivedAll(int i) {
-        return outstandingRec.get(i).containsAll(Handlemsg.nodenames.keySet());
+        if(outstandingRec.containsKey(i)) {
+            return outstandingRec.get(i).containsAll(Handlemsg.nodenames.keySet());
+        } else {
+            return true;
+        }
     }
 
     public static int SEQ = 1;
 
     public static int nextSeq(EZPacket pkt) {
         SEQ++;
-        if(pkt.getType() != 0 && pkt.getType() != 2) {
+        if(pkt.getType() != 0) {
             outstandingAck.put(SEQ, System.nanoTime());
             outstandingPkt.put(SEQ, pkt);
         }

@@ -34,6 +34,7 @@ public class ImageConverter {
 	  	byteArrayOS.flush();
 	  	imageInByte = byteArrayOS.toByteArray();
 	  	byteArrayOS.close();
+        System.out.println("sending image bytes: " + imageInByte.length);
 	  	return imageInByte;
     } catch (IOException e) {
       e.printStackTrace();
