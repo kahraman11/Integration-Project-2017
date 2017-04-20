@@ -1,7 +1,9 @@
 package PacketHandling;
 
+import Converter.ImageConverter;
 import GUI.GUI;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.ArrayList;
@@ -118,6 +120,11 @@ public class OutBuffer {
             }
         };
         thread.start();
+    }
+
+    public static void sendPacket(File file) {
+        EZPacket packet = new EZPacket(Network.nodenr, 0, 3, ImageConverter.send(file));
+        OutBuffer.addPacket(packet);
     }
 
     public void sendPacket(DatagramPacket dgp) {

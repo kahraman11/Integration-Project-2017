@@ -1,5 +1,7 @@
 package PacketHandling;
 
+import Converter.ImageConverter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,8 +25,18 @@ public class Handlemsg {
                 case 2:
                     text(p);
                     break;
+                case 3:
+                    recImage(p);
+                    break;
             }
         }
+    }
+
+    static public void recImage(EZPacket p) {
+        if(p.getTarget() == Network.nodenr || p.getTarget() == 0) {
+            ImageConverter.receive(p.getData());
+        }
+        retransmit(p);
     }
 
     static public void retransmit(EZPacket p) {

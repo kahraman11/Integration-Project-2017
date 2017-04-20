@@ -292,6 +292,16 @@ public class GUI {
 
                 EZPacket packet = new EZPacket(Network.nodenr, receiveNode, 2, data[1].getBytes());
                 OutBuffer.addPacket(packet);
+            } else if (input.contains("sendpng")) {
+                String arr[] = input.split(" ");
+                if(arr.length != 1) {
+                    OutBuffer.sendPacket(new File(arr[1]));
+                    lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": send image: " + arr[1] + "<br>");
+                    textOutput.insertComponent(lb);
+                } else {
+                    lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": invalid image.<br>");
+                    textOutput.insertComponent(lb);
+                }
             } else {
                 lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + textInput.getText() + "<br>");
                 textOutput.setText("");

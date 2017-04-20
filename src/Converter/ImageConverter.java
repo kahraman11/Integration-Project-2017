@@ -7,8 +7,13 @@ import java.io.*;
 
 public class ImageConverter {
 
+	public static void main(String[] args) {
+        byte[] bytes = send(new File(new File("").getAbsolutePath()+"/src/emoticons/weird.png"));
+        receive(bytes);
+	}
 
-  public void receive(byte[] packet) {
+
+  public static void receive(byte[] packet) {
 		InputStream in = new ByteArrayInputStream(packet);
 		BufferedImage imageInByte;
 		try {
@@ -20,7 +25,7 @@ public class ImageConverter {
 
   }
 
-  public byte[] send(File file) {
+  public static byte[] send(File file) {
     byte[] imageInByte = {};
     try {
 	  	BufferedImage image = ImageIO.read(file);
