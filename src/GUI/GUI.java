@@ -43,6 +43,7 @@ public class GUI {
         frame.setVisible(true);
         gui.textInput.grabFocus();
         Encryption.startUp("SuperSecretPassWord1092837081");
+        OutBuffer.checkOutStanding();
     }
 
     public GUI() throws IOException {
@@ -160,7 +161,6 @@ public class GUI {
                         if(!nodenumbers.get(i).equals(Network.nodenr)) {
                             connectedUserSTextArea.append("\nUser " + (nodenumbers.get(i)) + ": " + Handlemsg.nodenames.get(nodenumbers.get(i)));
                         } else {
-                            System.out.println("ik kom hier");
                             connectedUserSTextArea.append("\nUser " + Network.nodenr + ": " + Handlemsg.nodenames.get(Network.nodenr));
                             bool = true;
                         }

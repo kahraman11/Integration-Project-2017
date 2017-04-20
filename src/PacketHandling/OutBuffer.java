@@ -19,7 +19,7 @@ public class OutBuffer {
     public static ConcurrentHashMap<Integer, List<Integer>> outstandingRec = new ConcurrentHashMap<>();
 
 
-    public void checkOutStanding() {
+    public static void checkOutStanding() {
         Thread thread = new Thread() {
             public void run() {
                 for (Integer i : outstandingAck.keySet()) {
@@ -81,8 +81,6 @@ public class OutBuffer {
         if(packet.getSource() == Network.nodenr) {
             packet.setSeq(nextSeq(packet));
         }
-        System.out.println("sending packet " + packet.getSeq());
-        packet.dataPrint();
         outputBuffer.add(packet.getDGP());
     }
 
@@ -91,7 +89,7 @@ public class OutBuffer {
             public void run() {
                 int nr = 0;
                 while (true) {
-                    System.out.println("buffer: " + outputBuffer.size());
+                    //System.out.println("buffer: " + outputBuffer.size());
                     if (outputBuffer.size() > 0) {
                         sendPacket(outputBuffer.get(0));
                         outputBuffer.remove(0);

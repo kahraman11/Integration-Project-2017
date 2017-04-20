@@ -48,7 +48,6 @@ public class Encryption {
 
 	static public byte[] decrypt(byte[] encryptedText) {
 		String decryptedValue = "";
-        System.out.println("dencrypting: " + encryptedText.length);
         try {
 			Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
 			cipher.init(Cipher.DECRYPT_MODE, key);

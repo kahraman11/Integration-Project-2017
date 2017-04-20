@@ -32,14 +32,9 @@ public class EZPacket {
 
     public void setPacket(byte[] b) {
         data = new byte[b.length-headerlength];
-        System.out.println(b.length + " " + headerlength);
         System.arraycopy(b,headerlength,data,0,b.length-headerlength);
         if(data.length > 0) {
-            System.out.println("data just before decrypt " + data.length);
-            dataPrint();
-            System.out.println("data before decrypting is length: " + data.length);
             data = Encryption.decrypt(data);
-            System.out.println("data decrypted: " + new String(data));
         }
         seq = b[0] * 2097152 + b[1] * 16384 + b[2]*128 + b[3];
         target = b[4];
@@ -52,7 +47,6 @@ public class EZPacket {
     //Don't set packet on unencrypted data
     public void setPacket(byte[] b, int length) {
         byte[] reduced = new byte[length];
-        System.out.println("length: "  +length);
         System.arraycopy(b, 0, reduced, 0, length);
         setPacket(reduced);
     }
@@ -107,17 +101,12 @@ public class EZPacket {
     //DO NOT USE ANYWHERE except for RecThread
     public EZPacket(DatagramPacket d) {
         int length = d.getData()[6] * 256 + d.getData()[7];
-        System.out.println("constructor: " + length);
         setPacket(d.getData(), length);
     }
 
     public DatagramPacket getDGP() {
         data = Encryption.encrypt(data);
         byte[] bytes = getBytes();
-        System.out.println("sending name set: " + getSeq());
-        dataPrint();
-        System.out.println();
-        System.out.println("encryption decrypted: " + new String(Encryption.decrypt(data)));
         return new DatagramPacket(bytes, bytes.length, Network.group, Network.port);
     }
 
