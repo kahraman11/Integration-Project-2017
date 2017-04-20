@@ -265,7 +265,7 @@ public class GUI {
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
             }  else if (input.contains(":P")) {
-                lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/tongue-out-1.png' height=30 width=30></img>");
+                lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/tongue-out-1.png' height=30 width=30></img><br>");
                 textOutput.insertComponent(lb);
                 EZPacket packet = new EZPacket(Network.nodenr, 0, 2, textInput.getText().getBytes());
                 OutBuffer.addPacket(packet);
@@ -306,6 +306,18 @@ public class GUI {
     public void message(String name, String msg) {
         if(msg.contains(":)")) {
             lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/happy.png' height=30 width=30></img><br>");
+            textOutput.insertComponent(lb);
+        } else if (msg.contains(":(")) {
+            lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/sad.png' height=30 width=30></img><br>");
+            textOutput.insertComponent(lb);
+        } else if (msg.contains(":P")) {
+            lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/tongue-out-1.png' height=30 width=30></img><br>");
+            textOutput.insertComponent(lb);
+        } else if (msg.contains(":O")) {
+            lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/bored.png' height=30 width=30></img><br>");
+            textOutput.insertComponent(lb);
+        } else if (msg.contains(":S")) {
+            lb.setText(lb.getText() + "<html>" + Handlemsg.nodenames.get(Network.nodenr) + ": " + "<img src='file:src/emoticons/confused-1.png' height=30 width=30></img><br>");
             textOutput.insertComponent(lb);
         } else {
             lb.setText(lb.getText() + "<html>" + name + ": " + msg + "<br>");
