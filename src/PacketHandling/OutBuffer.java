@@ -25,7 +25,6 @@ public class OutBuffer {
         Thread thread = new Thread() {
             public void run() {
                 while (true) {
-                    System.out.println(outstandingAck.size());
                     for (Integer i : outstandingAck.keySet()) {
                         long time = System.nanoTime();
                         if (receivedAll(i)) {
